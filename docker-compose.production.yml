@@ -14,7 +14,7 @@ services:
     
 
   backend:
-    image: limonzzz/kittygram_final_backend
+    image: limonzzz/kittygram_backend
     env_file: .env
     volumes:
       - static:/backend_static
@@ -24,17 +24,16 @@ services:
 
   frontend:
     env_file: .env
-    image: limonzzz/kittygram_final_frontend
+    image: limonzzz/kittygram_frontend
     command: cp -r /app/build/. /static/
     volumes:
       - static:/static
 
   gateway:
-    image: limonzzz/kittygram_final_gateway
+    image: limonzzz/kittygram_gateway
     env_file: .env
     ports:
       - 9000:80
     volumes:
       - static:/static
       - media:/media
-      # - ./nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
