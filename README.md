@@ -69,7 +69,6 @@ docker build -t USERNAME/kittygram_backend .
 cd ../nginx
 docker build -t USERNAME/kittygram_gateway .
 ```
-
 Вместо USERNAME вставить свой логин на DockerHub.
 
 3. Запушить образы на DockerHub
