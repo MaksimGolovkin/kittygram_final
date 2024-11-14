@@ -11,7 +11,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django')
 
 DEBUG = os.getenv('DEBUG_VALUE', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost',).split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'akittygramm.sytes.net').split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -74,6 +74,7 @@ else:
             'PORT': os.getenv('DB_PORT', 5432),
         }
     }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
