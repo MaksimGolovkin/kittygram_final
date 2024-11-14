@@ -7,6 +7,7 @@
 
 
 ### Стек применяемых технологий:
+
 - __Python__, 
 - __Django__,
 - __Django rest framework__, 
