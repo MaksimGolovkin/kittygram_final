@@ -56,6 +56,7 @@ sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/col
 ### _Запуск проекта на удаленном сервере:_
 1. Клонировать репозиторий:
 
+
 ```
 git clone https://github.com/yandex-praktikum/kittygram2plus.git
 ```
