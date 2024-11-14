@@ -60,7 +60,6 @@ sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/col
 ```
 git clone https://github.com/yandex-praktikum/kittygram2plus.git
 ```
-
 2. Создать Docker-образ для контейнеров:
 ```
 cd frontend

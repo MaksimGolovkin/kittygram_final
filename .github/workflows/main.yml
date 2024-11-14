@@ -197,6 +197,19 @@ jobs:
 #TG
   send_message:
     runs-on: ubuntu-latest
+    if: github.ref_name != 'main'
+    needs: 
+      - frontend_tests
+      - Test with flake8 and django tests
+    steps:
+    - name: Send message
+      uses: appleboy/telegram-action@master
+      with:
+        to: ${{ secrets.TELEGRAM_TO }}
+        token: ${{ secrets.TELEGRAM_TOKEN }}
+        message: |
+          ${{ github.actor }} загрузил новую версию в ветку ${{ github.ref_name }} с коммитом ${{ github.event.commits[0].message }}!
+    if: github.ref_name == 'main'
     needs: deploy
     steps:
     - name: Send message
