@@ -78,7 +78,7 @@ jobs:
         with:
           context: ./backend/
           push: true
-          tags: limonzzz/kittygram_backend:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/kittygram_backend:latest
 
 #Frontend
   frontend_tests:
@@ -124,7 +124,7 @@ jobs:
         with:
           context: ./frontend/
           push: true
-          tags: limonzzz/kittygram_frontend:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/kittygram_frontend:latest
 
 #Nginx
   build_gateway_and_push_to_docker_hub:
@@ -147,7 +147,7 @@ jobs:
           context: ./nginx/
           push: true
           # Тут вместо username должен быть ваш логин на Docker Hub
-          tags: limonzzz/kittygram_gateway:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/kittygram_gateway:latest
 
 #server_reload
   deploy:
@@ -197,19 +197,6 @@ jobs:
 #TG
   send_message:
     runs-on: ubuntu-latest
-    if: github.ref_name != 'main'
-    needs: 
-      - frontend_tests
-      - Test with flake8 and django tests
-    steps:
-    - name: Send message
-      uses: appleboy/telegram-action@master
-      with:
-        to: ${{ secrets.TELEGRAM_TO }}
-        token: ${{ secrets.TELEGRAM_TOKEN }}
-        message: |
-          ${{ github.actor }} загрузил новую версию в ветку ${{ github.ref_name }} с коммитом ${{ github.event.commits[0].message }}!
-    if: github.ref_name == 'main'
     needs: deploy
     steps:
     - name: Send message
