@@ -200,4 +200,4 @@ jobs:
         to: ${{ secrets.TELEGRAM_TO }}
         token: ${{ secrets.TELEGRAM_TOKEN }}
         message: |
-          ${{ if eq(github.ref, 'refs/heads/main') }} Деплой успешно выполнен, ${{ github.actor }} загрузил новую версию с коммитом ${{ github.event.head_commit.message }}! ${{ else }} Пуш в ветку ${{ github.ref }} выполнен, но деплой не произведен. ${{ end }}
+          Деплой успешно выполнен, ${{ github.actor }} загрузил новую версию с коммитом ${{ github.event.commits[0].message }}!
