@@ -1,27 +1,141 @@
-#  Как работать с репозиторием финального задания
+![Workflow Status](https://github.com/MaksimGolovkin/kittygram_final/actions/workflows/main.yml/badge.svg)
 
-## Что нужно сделать
+# Проект Kittygram - платформа для обмена фотографиями домашних питомцев.
 
-Настроить запуск проекта Kittygram в контейнерах и CI/CD с помощью GitHub Actions
+### Описание проекта:
+#### Позволяет публиковать пользователям фотографии своих домашних животных, с кратким описанием.
 
-## Как проверить работу с помощью автотестов
 
-В корне репозитория создайте файл tests.yml со следующим содержимым:
-```yaml
-repo_owner: ваш_логин_на_гитхабе
-kittygram_domain: полная ссылка (https://доменное_имя) на ваш проект Kittygram
-taski_domain: полная ссылка (https://доменное_имя) на ваш проект Taski
-dockerhub_username: ваш_логин_на_докерхабе
+### Стек применяемых технологий:
+- __Python__, 
+- __Django__,
+- __Django rest framework__, 
+- __PostgreSQL__
+
+### _Запуск проекта на локальном сервере:_ 
+1. Клонировать репозиторий:
+
+```
+git clone https://github.com/yandex-praktikum/kittygram2plus.git
 ```
 
-Скопируйте содержимое файла `.github/workflows/main.yml` в файл `kittygram_workflow.yml` в корневой директории проекта.
+2. Создать Docker-образ для контейнеров:
+```
+cd frontend
+docker build -t USERNAME/kittygram_frontend .
+cd ../backend
+docker build -t USERNAME/kittygram_backend .
+cd ../nginx
+docker build -t USERNAME/kittygram_gateway .
+```
+3. Запушить образы на DockerHub
 
-Для локального запуска тестов создайте виртуальное окружение, установите в него зависимости из backend/requirements.txt и запустите в корневой директории проекта `pytest`.
+```
+docker push USERNAME/kittygram_frontend
+docker push USERNAME/kittygram_backend
+docker push USERNAME/kittygram_gateway
+```
+Вместо USERNAME вставить свой логин на DockerHub.
 
-## Чек-лист для проверки перед отправкой задания
+4. Запустите контейнеры, перейдя в корневую директорию, командой:
+```
+sudo docker compose -f docker-compose.production.yml up -d
+```
+5. Примените миграции, соберите статику бэкенда и скопируйте для раздачи:
+```
+sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
+sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
+sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /backend_static/static/
+```
+#### _Для локальной развертки более ничего не требуется, перейдите по адресу "(https://localhost/)"_
 
-- Проект Taski доступен по доменному имени, указанному в `tests.yml`.
-- Проект Kittygram доступен по доменному имени, указанному в `tests.yml`.
-- Пуш в ветку main запускает тестирование и деплой Kittygram, а после успешного деплоя вам приходит сообщение в телеграм.
-- В корне проекта есть файл `kittygram_workflow.yml`.
-# Пример 
+---
+
+### _Запуск проекта на удаленном сервере:_
+1. Клонировать репозиторий:
+
+```
+git clone https://github.com/yandex-praktikum/kittygram2plus.git
+```
+
+2. Создать Docker-образ для контейнеров:
+```
+cd frontend
+docker build -t USERNAME/kittygram_frontend .
+cd ../backend
+docker build -t USERNAME/kittygram_backend .
+cd ../nginx
+docker build -t USERNAME/kittygram_gateway .
+```
+
+Вместо USERNAME вставить свой логин на DockerHub.
+
+3. Запушить образы на DockerHub
+
+```
+docker push USERNAME/kittygram_frontend
+docker push USERNAME/kittygram_backend
+docker push USERNAME/kittygram_gateway
+```
+Вместо USERNAME вставить свой логин на DockerHub.
+
+4. Подключитесь к удаленному серверу:
+```
+ssh -i PATH_TO_SSH_KEY/SSH_KEY_NAME YOUR_USERNAME@SERVER_IP_ADDRESS 
+```
+
+5. Создайте директорию в которой будет распологаться инструкции для Docker-a:
+```
+mkdir kittigram
+```
+
+6. Установите Docker Compose на сервер:
+```
+sudo apt update
+sudo apt install curl
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo apt install docker-compose
+```
+
+7. Скопируйте файлы "docker-compose.production.yml" и ".env" в директорию kittygram/ на сервере:
+```
+scp -i PATH_TO_SSH_KEY/SSH_KEY_NAME docker-compose.production.yml YOUR_USERNAME@SERVER_IP_ADDRESS:/home/YOUR_USERNAME/kittygram/docker-compose.production.yml
+```
+    - 'PATH_TO_SSH_KEY' - путь к файлу с вашим SSH-ключом
+    - 'SSH_KEY_NAME' - имя файла с вашим SSH-ключом
+    - 'YOUR_USERNAME' - ваше имя пользователя на сервере
+    - 'SERVER_IP_ADDRESS' - IP-адрес вашего сервера
+
+8. Запустите контейнеры, перейдя в корневую директорию, командой:
+```
+sudo docker compose -f docker-compose.production.yml up -d
+```
+9. Примените миграции, соберите статику бэкенда и скопируйте для раздачи:
+```
+sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
+sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
+sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /backend_static/static/
+```
+10. Откройте конфигурационный файл Nginx в редакторе nano:
+```
+sudo nano /etc/nginx/sites-enabled/default
+```
+
+11. Добавьте настройки "location" в секции "server":
+```
+location / {
+    proxy_set_header Host $http_host;
+    proxy_pass http://127.0.0.1:9000;
+}
+```
+
+12. Перезапустите Nginx:
+```
+sudo service nginx reload
+```
+
+#### _Для удаленной развертки более ничего не требуется, перейдите по адресу "(https://akittygramm.sytes.net/)"_
+
+---
+_Автор проекта - maksimgolovkin96. :)_
