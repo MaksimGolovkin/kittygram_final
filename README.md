@@ -108,6 +108,27 @@ scp -i PATH_TO_SSH_KEY/SSH_KEY_NAME docker-compose.production.yml YOUR_USERNAME@
     - 'YOUR_USERNAME' - ваше имя пользователя на сервере
     - 'SERVER_IP_ADDRESS' - IP-адрес вашего сервера
 
+```
+scp -i PATH_TO_SSH_KEY/SSH_KEY_NAME docker-compose.production.yml YOUR_USERNAME@SERVER_IP_ADDRESS:/home/YOUR_USERNAME/kittygram/.env
+```
+    - 'PATH_TO_SSH_KEY' - путь к файлу с вашим SSH-ключом
+    - 'SSH_KEY_NAME' - имя файла с вашим SSH-ключом
+    - 'YOUR_USERNAME' - ваше имя пользователя на сервере
+    - 'SERVER_IP_ADDRESS' - IP-адрес вашего сервера
+
+В файле ".env" необходимо указать переменные окружения, ожидаются следующие:
+
+    - 'SECRET_KEY' - Секректный ключ от Django, установлен по умолчанию.
+    - 'DEBUG_VALUE' - Переключатель режима откладки, по умолчанию 'False'
+    - 'ALLOWED_HOSTS' - Список строк, представляющих имена хоста/домена, которые может обслуживать Django, по умолчанию 'localhost'
+    - 'SQLITE3_VALUE' - Переключатель базы данных, по умолчанию 'False'.
+    - 'POSTGRES_DB' - Имя базы данных PostgreSQL.
+    - 'POSTGRES_USER' - Имя пользователя PostgreSQL.
+    - 'POSTGRES_PASSWORD' - Пароль пользователя PostgreSQL.
+    - 'DB_NAME' - адрес, по которому Django будет соединяться с базой данных. (Имя контейнера)
+    - 'DB_PORT' - порт, по которому Django будет обращаться к базе данных. 5432 — это порт по умолчанию для PostgreSQL.
+
+
 8. Запустите контейнеры, перейдя в корневую директорию, командой:
 ```
 sudo docker compose -f docker-compose.production.yml up -d

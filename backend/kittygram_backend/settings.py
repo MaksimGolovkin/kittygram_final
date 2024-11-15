@@ -11,7 +11,7 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django')
 
 DEBUG = os.getenv('DEBUG_VALUE', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'akittygramm.sytes.net').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost').split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -56,7 +56,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'kittygram_backend.wsgi.application'
 
-if os.getenv('USE_SQLITE3'):
+if os.getenv('SQLITE3_VALUE', 'False').lower() == 'true':
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -74,7 +74,6 @@ else:
             'PORT': os.getenv('DB_PORT', 5432),
         }
     }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
